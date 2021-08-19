@@ -66,6 +66,9 @@ class Timer:
     def since_split(self):
         return self.current_time - self.splits[-1]
 
+    def last_split(self):
+        return self.splits[-1]
+
     def data(self):
         d = {}
         d['label'] = self.label

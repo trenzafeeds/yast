@@ -45,15 +45,20 @@ class MainWindow(QMainWindow):
         self.timer_name.setAlignment(Qt.AlignCenter)
         self.timer_name.setStyleSheet("background-color: pink; color: white; border: 1px solid aqua;")
         self.last_split = QLabel('No Split Yet')
-        self.last_split.setFont(QFont('Monospace', 10))
+        self.last_split.setFont(QFont('Monospace', 12))
         self.last_split.setAlignment(Qt.AlignCenter)
         self.last_split.setStyleSheet("background-color: pink; color: white; border: 1px solid aqua;")
+        self.split_val = QLabel('No Split Yet')
+        self.split_val.setFont(QFont('Monospace', 12))
+        self.split_val.setAlignment(Qt.AlignCenter)
+        self.split_val.setStyleSheet("background-color: pink; color: white; border: 1px solid aqua;")
 
         self.timer_w = QWidget()
         self.w_layout = QGridLayout(self.timer_w)
         self.w_layout.addWidget(self.timer_name, 0, 0)
         self.w_layout.addWidget(self.last_split, 1, 1)
         self.w_layout.addWidget(self.label, 0, 1)
+        self.w_layout.addWidget(self.split_val, 1, 0)
         self.setCentralWidget(self.timer_w)
 
         self.qtimer = QTimer()
@@ -79,7 +84,7 @@ class MainWindow(QMainWindow):
 
     def updatesplit(self):
         lsplit = self.rtimer.since_split()
-        self.last_split.setText("Split: {}".format(display_time(lsplit)))
+        self.last_split.setText(display_time(lsplit))
 
     def startpause(self):
         if not self.rtimer.started: self.rtimer.start()
@@ -89,7 +94,9 @@ class MainWindow(QMainWindow):
 
     def split(self):
         self.rtimer.split()
-
+        last = self.rtimer.last_split()
+        self.split_val.setText(display_time(last))
+        
 def main():
     qapp = QApplication(sys.argv)
     qapp.setStyle('Fusion')
