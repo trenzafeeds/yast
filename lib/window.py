@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.timer_w)
 
         self.qtimer = QTimer()
-        self.qtimer.setInterval(10)
+        self.qtimer.setInterval(50)
         self.qtimer.timeout.connect(self.updatetime)
 
         self.hk_startpause = keyboard.GlobalHotKeys({'{}'.format(STARTPAUSEKEY):self.startpause})
