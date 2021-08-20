@@ -78,14 +78,14 @@ class Timer:
         return json.dumps(self.data())
 
     def save(self):
-        with open(self.label+'.yast', 'w') as f:
+        with open('save/'+self.label+'.yast', 'w') as f:
             return f.write(self.get_json())
 
     def load(self, fname):
-        if not os.path.exists(fname+'.yast'):
+        if not os.path.exists('save/'+fname+'.yast'):
             return False
         else:
-            with open(fname+'.yast') as f:
+            with open('save/'+fname+'.yast') as f:
                 load_data = json.loads(f.read())
             if load_data:
                 self.current_time = load_data['time']

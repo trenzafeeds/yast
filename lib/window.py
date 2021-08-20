@@ -10,13 +10,8 @@ Sources:
 [2] https://stackoverflow.com/questions/49971584/updating-pyqt5-gui-with-live-data
 """
 
-STARTPAUSEKEY = '<insert>'
-SPLITKEY = '<home>'
-UNSPLITKEY = '<end>'
-SAVEKEY = '<f12>'
-QUITKEY = '<f11>'
-
-from timer import *
+from lib.timer import *
+from config import *
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
