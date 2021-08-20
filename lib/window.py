@@ -11,6 +11,9 @@ Sources:
 
 STARTPAUSEKEY = '<insert>'
 SPLITKEY = '<home>'
+UNSPLITKEY = '<end>'
+SAVEKEY = '<f12>'
+QUITKEY = '<f11>'
 
 from timer import *
 
@@ -25,8 +28,10 @@ def display_time(time_in_s):
 # Following class from [2]
 class MainWindow(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, timer_name):
         QMainWindow.__init__(self)
+        self.timer_name = timer_name
+        
         self.setMinimumWidth(350)
         self.setMinimumHeight(100)
 
@@ -67,15 +72,23 @@ class MainWindow(QMainWindow):
 
         self.hk_startpause = keyboard.GlobalHotKeys({'{}'.format(STARTPAUSEKEY):self.startpause})
         self.hk_split = keyboard.GlobalHotKeys({'{}'.format(SPLITKEY):self.split})
+        self.hk_unsplit = keyboard.GlobalHotKeys({'{}'.format(UNSPLITKEY):self.unsplit})
+        self.hk_save = keyboard.GlobalHotKeys({'{}'.format(SAVEKEY):self.save})
+        self.hk_quit = keyboard.GlobalHotKeys({'{}'.format(QUITKEY):self.finish})
         self.hk_startpause.start()
         self.hk_split.start()
+        self.hk_unsplit.start()
+        self.hk_save.start()
+        self.hk_quit.start()
         
         self.event_loop()
 
     def event_loop(self):
         self.rtimer = Timer()
         self.updatesplit()
+        self.checksplitval()
         self.qtimer.start()
+        self.timer_name.setText(self.rtimer.label)
 
     def updatetime(self):
         ctime = self.rtimer.get_time()
@@ -93,14 +106,30 @@ class MainWindow(QMainWindow):
             else: self.rtimer.resume()
 
     def split(self):
-        self.rtimer.split()
+        last = self.rtimer.split()
+        self.split_val.setText(display_time(last))
+
+    def unsplit(self):
+        last = self.rtimer.unsplit()
+        self.split_val.setText(display_time(last))
+
+    def checksplitval(self):
         last = self.rtimer.last_split()
         self.split_val.setText(display_time(last))
+
+    def save(self):
+        self.rtimer.save()
+
+    def finish(self):
+        if not self.rtimer.active:
+            self.close()
+        else: pass
+        
         
 def main():
     qapp = QApplication(sys.argv)
     qapp.setStyle('Fusion')
-    qwin = MainWindow()
+    qwin = MainWindow(None)
     qwin.show()
     sys.exit(qapp.exec_())
     

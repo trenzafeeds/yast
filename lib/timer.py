@@ -2,7 +2,7 @@
 timer.py
 """
 
-import time, sys
+import time, sys, json, os
 
 class Timer:
     """
@@ -15,21 +15,17 @@ class Timer:
     """
 
     def __init__(self, label = None, resume_data = None):
-        if resume_data:
-            self.label = resume_data['label']
-            self.current_time = resume_data['time']
-            self.splits = resume_data['splits']
-        else:
-            if label: self.label = label
-            else: self.label = "Unlabeled Timer"
+        if label: self.label = label
+        else: self.label = "Unlabeled_Timer"
+        if not self.load(self.label):
             self.current_time = 0.0
             self.splits = [0.0]
         self.started = False
         self.active = False
-        self.init_time = None
+        self.init_time = 0.0
 
     def start(self):
-        if self.init_time != None:
+        if self.init_time != 0.0:
             print("Error: attempted to re-initialize timer.")
             sys.exit(1)
 
@@ -56,7 +52,7 @@ class Timer:
         """ Returns new split as most recent split """
         s = self.get_time()
         self.splits.append(s)
-        return s
+        return self.last_split()
 
     def unsplit(self):
         """ Returns the split before deleted split as most recent split """
@@ -67,7 +63,9 @@ class Timer:
         return self.current_time - self.splits[-1]
 
     def last_split(self):
-        return self.splits[-1]
+        if len(self.splits) > 1:
+            return self.splits[-1] - self.splits[-2]
+        else: return self.splits[-1]
 
     def data(self):
         d = {}
@@ -75,6 +73,25 @@ class Timer:
         d['time'] = self.get_time()
         d['splits'] = self.splits
         return d
-    
-    
+
+    def get_json(self):
+        return json.dumps(self.data())
+
+    def save(self):
+        with open(self.label+'.yast', 'w') as f:
+            return f.write(self.get_json())
+
+    def load(self, fname):
+        if not os.path.exists(fname+'.yast'):
+            return False
+        else:
+            with open(fname+'.yast') as f:
+                load_data = json.loads(f.read())
+            if load_data:
+                self.current_time = load_data['time']
+                self.splits = load_data['splits']
+                return True
+            else: return False
+            
+            
 
