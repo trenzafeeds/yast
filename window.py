@@ -1,3 +1,4 @@
+
 """
 window.py
 
@@ -28,9 +29,9 @@ def display_time(time_in_s):
 # Following class from [2]
 class MainWindow(QMainWindow):
 
-    def __init__(self, timer_name):
+    def __init__(self, timer_label):
         QMainWindow.__init__(self)
-        self.timer_name = timer_name
+        self.timer_label = timer_label
         
         self.setMinimumWidth(350)
         self.setMinimumHeight(100)
@@ -84,7 +85,7 @@ class MainWindow(QMainWindow):
         self.event_loop()
 
     def event_loop(self):
-        self.rtimer = Timer()
+        self.rtimer = Timer(self.timer_label)
         self.updatesplit()
         self.checksplitval()
         self.qtimer.start()
@@ -126,13 +127,13 @@ class MainWindow(QMainWindow):
         else: pass
         
         
-def main():
+def main_window(timer_label=None):
     qapp = QApplication(sys.argv)
     qapp.setStyle('Fusion')
-    qwin = MainWindow(None)
+    qwin = MainWindow(timer_label)
     qwin.show()
     sys.exit(qapp.exec_())
     
 if __name__=='__main__':
-    main()
+    main_window(None)
             
