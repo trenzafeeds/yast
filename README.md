@@ -25,3 +25,5 @@ is paused.
 ## Config
 
 Hotkeys can be changed in `config.py`. Check pynput docs for correct formatting of keycodes.
+
+Sorry, it only comes in pink.
